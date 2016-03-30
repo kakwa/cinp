@@ -4,6 +4,7 @@ import (
     "fmt"
     getopt "github.com/kesselborn/go-getopt"
     "os"
+    "github.com/kakwa/cinp/proto/v1"
 )
 
 func main() {
@@ -34,4 +35,10 @@ func main() {
         }
         os.Exit(exit_code)
     }
+    xid := v1.GenXid()
+    _, err := v1.NewPacket(v1.Clear, v1.Request, xid, nil)
+    if err != nil {
+        os.Exit(1)
+    }
+
 }

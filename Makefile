@@ -9,7 +9,7 @@ OPS=
 
 PREFIX=/usr
 
-DEPS=packet.go cinp/v1.go
+DEPS=proto/v1/v1.go proto/common.go
 
 export GOPATH=$(shell pwd)/vendor/
 
@@ -17,6 +17,8 @@ all: options cinp-client cinp-server
 
 get:
 	$(GO) get github.com/kesselborn/go-getopt
+	mkdir -p $(GOPATH)/src/github.com/kakwa/
+	[ -e $(GOPATH)/src/github.com/kakwa/cinp ] || ln -s `pwd` $(GOPATH)/src/github.com/kakwa/cinp
 
 options:
 	@echo "---"

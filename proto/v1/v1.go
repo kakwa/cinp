@@ -4,8 +4,6 @@ import (
     "errors"
     "math/rand"
     "encoding/binary"
-//    "github.com/kakwa/cinp/proto"
-//    "time"
 )
 
 type Packet []byte
@@ -86,7 +84,22 @@ func NewPacket(format Format, opcode OpCode, xid XId, pl Payload) (Packet, error
     return p, nil
 }
 
-func Reply(in Packet, pl Payload) (Packet, error) {
-    p := make(Packet, 270)
-    return p, nil
+func NewRequest(format Format) (Packet, XId, error) {
+    xid := GenXid()
+    p, err := NewPacket(format, Request, xid, nil)
+    return p, xid, err
+}
+
+func NewAnswer(in Packet, pl Payload) (Packet, XId, error) {
+    if in.Version() != V1 {
+        return nil, nil, errors.New("bad version")
+    }
+
+    if in.OpCode() != Request {
+        return nil, nil, errors.New("not a request")
+    }
+    xid := in.XId()
+    format := in.Format()
+    p, err := NewPacket(format, Answer, xid, pl)
+    return p, xid, err
 }

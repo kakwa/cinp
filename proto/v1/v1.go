@@ -16,11 +16,11 @@ type OpCode byte
 type XId []byte
 type Payload []byte
 
-func (p Packet)  Version() Version { return Version(p[0]) }
-func (p Packet)  OpCode() OpCode   { return OpCode(p[1]) }
-func (p Packet)  Format() Format   { return Format(p[2]) }
-func (p Packet)  Size() Size       { return Size(p[3]) }
-func (p Packet)  XId() XId         { return XId(p[4:8]) }
+func (p Packet) Version() Version { return Version(p[0]) }
+func (p Packet) OpCode()  OpCode  { return OpCode(p[1])  }
+func (p Packet) Format()  Format  { return Format(p[2])  }
+func (p Packet) Size()    Size    { return Size(p[3])    }
+func (p Packet) XId()     XId     { return XId(p[4:8])   }
 func (p Packet) Payload() Payload {
     if p.Size() == 0 {
        return nil
@@ -29,11 +29,11 @@ func (p Packet) Payload() Payload {
     }
 }
 
-func (p Packet) SetVersion(v Version)    error { p[0] = byte(v); return nil}
+func (p Packet) SetVersion(v Version)    error { p[0] = byte(v); return nil      }
 func (p Packet) SetOpCode(opcode OpCode) error { p[1] = byte(opcode); return nil }
 func (p Packet) SetFormat(format Format) error { p[2] = byte(format); return nil }
-func (p Packet) SetSize(size Size)       error { p[3] = byte(size); return nil }
-func (p Packet) SetXId(xid XId)          error { copy(p.XId(), xid); return nil }
+func (p Packet) SetSize(size Size)       error { p[3] = byte(size); return nil   }
+func (p Packet) SetXId(xid XId)          error { copy(p.XId(), xid); return nil  }
 func (p Packet) SetPayload(pl Payload)   error {
     if len(pl) > 254 {
         return errors.New("payload max size exeeded")
@@ -46,6 +46,7 @@ func (p Packet) SetPayload(pl Payload)   error {
 const (
     WrongVersion OpCode = 128
     WrongFormat  OpCode = 129
+    MalFormed    OpCode = 130
     Request      OpCode = 0
     Answer       OpCode = 1
 )
@@ -82,5 +83,10 @@ func NewPacket(format Format, opcode OpCode, xid XId, pl Payload) (Packet, error
         return nil, errors.New("wrong payload format")
     }
     p.SetPayload(rpl)
+    return p, nil
+}
+
+func Reply(in Packet, pl Payload) (Packet, error) {
+    p := make(Packet, 270)
     return p, nil
 }

@@ -35,8 +35,12 @@ func main() {
         }
         os.Exit(exit_code)
     }
-    xid := v1.GenXid()
-    _, err := v1.NewPacket(v1.Clear, v1.Request, xid, nil)
+    req, xid, err := v1.NewRequest(v1.Clear)
+    fmt.Println("packet: ", req, "\nxid: ", xid)
+    ans, xid, err := v1.NewAnswer(req, v1.Payload("eth0"))
+    fmt.Println("packet: ", ans, "\nxid: ", xid, "\npayload :", v1.Payload("eth0"))
+    fmt.Printf("%s\n", ans.Payload())
+
     if err != nil {
         os.Exit(1)
     }

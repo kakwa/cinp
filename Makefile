@@ -17,6 +17,7 @@ all: options cinp-client cinp-server
 
 get:
 	$(GO) get github.com/kesselborn/go-getopt
+	$(GO) get golang.org/x/net/ipv4
 	mkdir -p $(GOPATH)/src/github.com/kakwa/
 	[ -e $(GOPATH)/src/github.com/kakwa/cinp ] || ln -s `pwd` $(GOPATH)/src/github.com/kakwa/cinp
 

@@ -5,6 +5,7 @@ import (
     getopt "github.com/kesselborn/go-getopt"
     "os"
     "github.com/kakwa/cinp/proto/v1"
+    "github.com/kakwa/cinp/proto"
 )
 
 func main() {
@@ -35,6 +36,8 @@ func main() {
         }
         os.Exit(exit_code)
     }
+    err := proto.ListenAndServeIf(options["nic"].String, nil, "4096")
+    fmt.Println("**** Error: ", err, "\n")
     req, xid, err := v1.NewRequest(v1.Clear)
     fmt.Println("packet: ", req, "\nxid: ", xid)
     ans, xid, err := v1.NewAnswer(req, v1.Payload("eth0"))
